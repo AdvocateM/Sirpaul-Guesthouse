@@ -1,0 +1,15 @@
+/* Responsive styles */
+@media (max-width: 768px) {
+  .header__area-menubar {
+    flex-direction: column;
+  }
+
+  .header__area-menubar-right-menu ul {
+    display: none;
+    flex-direction: column;
+  }
+
+  .header__area-menubar-right-menu ul.active {
+    display: flex;
+  }
+}
