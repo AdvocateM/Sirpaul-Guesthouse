@@ -2,13 +2,9 @@ import axios from 'axios';
 import { getSessionToken, removeSessionAndLogoutUser } from './authentication';
 
 const ApiService = axios.create({
-  // baseURL: process.env.REACT_APP_API_BASE_URL
   baseURL: 'https://craftbakez-servers.onrender.com/'
 });
 
-/**
- * Interceptor for all requests
- */
 ApiService.interceptors.request.use(
   (config) => {
     /**

@@ -2,10 +2,10 @@ const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:3034',
   'http://localhost:5500',
-  'https://api-beach-resort.srmukul.com',
-  'https://admin-beach-resort.vercel.app',
-  'https://mukul-beach-resort.vercel.app'
+  'https://admin-navy-theta.vercel.app/',
+  'https://admin-hwpg3q89v-advocatems-projects.vercel.app/',
 ];
+
 
 const corsOptions = {
   origin: (origin, callback) => {
