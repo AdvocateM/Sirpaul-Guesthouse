@@ -1,80 +1,49 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Model from './modell/Model';
 import bannerImage from '../assets/img/banner/page-banner-3.png';
 import Category from '../Components/category';
-import roomImage1 from '../assets/img/hotel/hotel-19.png';
-import roomImage2 from '../assets/img/hotel/hotel-20.png';
-import roomImage3 from '../assets/img/hotel/hotel-21.png';
-import roomImage4 from '../assets/img/hotel/hotel-22.png';
-import roomImage5 from '../assets/img/hotel/hotel-23.png';
+import notificationWithIcon from './../utils/notification';
+import ApiService from './../utils/apiService';
 
-const rooms = [
-  {
-    id: 1,
-    name: 'Superior Room',
-    description: 'Savvy travelers are looking for more than just the next destination on the map.',
-    beds: 3,
-    guests: 7,
-    price: 700,
-    rating: 2.9,
-    image: roomImage1,
-  },
-  {
-    id: 2,
-    name: 'Junior Suite',
-    description: 'Savvy travelers are looking for more than just the next destination on the map.',
-    beds: 4,
-    guests: 2,
-    price: 700,
-    rating: 3.9,
-    image: roomImage2,
-  },
-  {
-    id: 3,
-    name: 'Double Room',
-    description: 'Savvy travelers are looking for more than just the next destination on the map.',
-    beds: 3,
-    guests: 4,
-    price: 800,
-    rating: 4.9,
-    image: roomImage3,
-  },
-  {
-    id: 4,
-    name: 'Small Suite',
-    description: 'Savvy travelers are looking for more than just the next destination on the map.',
-    beds: 2,
-    guests: 3,
-    price: 700,
-    rating: 4.4,
-    image: roomImage4,
-  },
-  {
-    id: 5,
-    name: 'Luxury Room',
-    description: 'Savvy travelers are looking for more than just the next destination on the map.',
-    beds: 3,
-    guests: 6,
-    price: 600,
-    rating: 3.7,
-    image: roomImage5,
-  }
-];
+const RoomList = () => {
+  const [showModel, setModel] = useState(false);
+  const [selectedRoomId, setSelectedRoomId] = useState(null);
+  const [query, setQuery] = useState({ search: '', sort: 'asce', page: '1', rows: '10' });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [rooms, setRooms] = useState([]);
 
-const RoomList = ({ onOpenModal }) => {
-  const [ShowMdel, SetModel] = useState(false);
+  // Fetch room data from API
+  useEffect(() => {
+    const fetchRooms = async () => {
+      try {
+        const response = await ApiService.get(`/api/v1/all-rooms-list`);
+        setRooms(response.result.data.rows);
+      } catch (err) {
+        setError(err.message);
+        notificationWithIcon('error', 'Error fetching rooms', err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const handleModel = () =>{
-    SetModel(true);
+    fetchRooms();
+  }, [query]); // Re-fetch when query changes
 
-    if (ShowMdel === true){
-      SetModel(false)
-    }else{
-      SetModel(true)
+  const handleModelToggle = (roomId) => {
+    setSelectedRoomId(roomId);
+    setModel(prev => !prev);
+  };
+
+  const truncateDescription = (description) => {
+    const words = description.split(' ');
+    if (words.length > 65) {
+      return `${words.slice(0, 65).join(' ')}... Read more`;
     }
-  }
-  
+    return description;
+  };
+
   return (
     <div>
       {/* Page Banner */}
@@ -107,40 +76,52 @@ const RoomList = ({ onOpenModal }) => {
             </div>
 
             <div className="col-xl-9">
-              {rooms.map(room => (
-                <div key={room.id} className="room__list-item">
-                  <div className="room__list-item-left">
-                    <div className="room__list-item-image">
-                      <img src={room.image} alt={room.name} />
-                    </div>
-                  </div>
-                  <div className="room__list-item-right">
-                    <div className="room__list-item-right-content">
-                      <h4>{room.name}</h4>
-                      <p>{room.description}</p>
-                      <ul>
-                        <li><i className="fal fa-bed-alt"></i>({room.beds}) beds</li>
-                        <li><i className="fal fa-users"></i>({room.guests}) Guests</li>
-                      </ul>
-                    </div>
-                    <div className="room__list-item-right-meta">
-                      <div className="room__list-item-right-meta-top">
-                        <span>R{room.price}/Night</span>
-                        <p><i className="fas fa-star"></i><span>{room.rating}</span> 2k</p>
+              {loading ? (
+                <p>Loading...</p>
+              ) : error ? (
+                <p>Error: {error}</p>
+              ) : rooms.length === 0 ? (
+                <p>No rooms available.</p>
+              ) : (
+                rooms.map(room => (
+                  <div key={room.id} className="room__list-item">
+                    <div className="room__list-item-left">
+                      <div className="room__list-item-image">
+                        <img src={room.room_images[0]?.url} alt={room.room_name} />
                       </div>
-                      <button className="theme-btn"  onClick={handleModel}>Book<i className="fal fa-long-arrow-right"></i></button>
+                    </div>
+                    <div className="room__list-item-right">
+                      <div className="room__list-item-right-content">
+                        <h4>{room.room_name}</h4>
+                        <p>{truncateDescription(room.room_description)}</p>
+                        <ul>
+                          <li><i className="fal fa-bed-alt"></i>({room.room_size}) beds</li>
+                          <li><i className="fal fa-users"></i>({room.room_capacity}) Guests</li>
+                        </ul>
+                      </div>
+                      <div className="room__list-item-right-meta">
+                        <div className="room__list-item-right-meta-top">
+                          <span>R{room.room_price}/Night</span>
+                          <p><i className="fas fa-star"></i><span>{room.rating}</span> 2k</p>
+                        </div>
+                        <button className="theme-btn" onClick={() => handleModelToggle(room.room.id)}>
+                          Book<i className="fal fa-long-arrow-right"></i>
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
         </div>
       </div>
 
-      {ShowMdel && <Model />}
+      {showModel && <Model roomId={selectedRoomId} onClose={handleModelToggle} />}
     </div>
   );
 };
+
+// https://www.booking.com/Share-2sZEgG
 
 export default RoomList;

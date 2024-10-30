@@ -62,7 +62,7 @@ const Header = () => {
             </div>
             <div className="header__area-menubar-right-box">
               <div className="header__area-menubar-right-box-btn">
-                <Link className="theme-btn" to="/contact">
+                <Link className="theme-btn" to="https://www.booking.com/Share-8WNXQJ">
                   Book Now<i className="fal fa-long-arrow-right"></i>
                 </Link>
               </div>

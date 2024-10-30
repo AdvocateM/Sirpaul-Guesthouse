@@ -1,7 +1,7 @@
 {
-  "name": "hotel-room-booking-system-backed",
+  "name": "SirpaulHotel",
   "version": "v0.0.1",
-  "description": "Build an Hotel Room Booking System for node.js, express.js application from the scratch by Mukul",
+  "description": "Build an SirpaulHotel Room Booking System for node.js, express.js application from the scratch by Mr Maroga",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

@@ -65,7 +65,7 @@ function RoomDetails({ id }) {
             label={<span className='whitespace-nowrap'>Room Price</span>}
             span={2}
           >
-            {`$ ${response?.data?.room_price}`}
+            {`R ${response?.data?.room_price}`}
           </Descriptions.Item>
 
           <Descriptions.Item
