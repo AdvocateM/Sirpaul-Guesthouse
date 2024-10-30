@@ -1,12 +1,5 @@
 const currentDateTime = require('../lib/current.date.time');
 const getDateAfterDuration = require('../lib/get.date.after.duration');
-
-/**
- * Function to send success response for user login with JWT access and refresh token
- * @param {*} res Express response object
- * @param {*} user User object with login information
- * @param {*} maintenance Optional maintenance information
- */
 const loginResponse = (res, user, maintenance) => {
   // Generate JWT tokens
   const accessToken = user.getJWTToken();

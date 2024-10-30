@@ -1,4 +1,3 @@
-
 const router = require('express').Router();
 const { isAuthenticatedUser, isBlocked } = require('../middleware/app.authentication');
 const { roomReviewAdd, getRoomReviewsList, editSelfRoomReview } = require('../controllers/review.controllers');
