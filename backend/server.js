@@ -12,7 +12,7 @@ const jwtSecretKey = process.env.JWT_SECRET_KEY;
 
 
 // Start the application server on the port specified in .env
-const port = process.env.APP_PORT || 4000; // Default to port 3000 if APP_PORT is not defined
+const port = process.env.APP_PORT; // Default to port 3000 if APP_PORT is not defined
 app.listen(port, () => {
   logger.info(`App server running on: ${process.env.APP_BASE_URL || `http://localhost:${port}`}`);
 });
